@@ -1,0 +1,81 @@
+Running EXHAUSTIVE analysis on test3.js...
+[Tier 2] Splitting diff into 1 chunks for qwen2.5:14b...
+[Tier 2] Auditing chunk 1/1...
+
+--- RESULT ---
+{
+  "status": "ran",
+  "reason": null,
+  "result": {
+    "engine": "local",
+    "model": "qwen2.5:14b",
+    "summary": "Integrated analysis of 1 chunks. Found 5 issues.",
+    "findings": [
+      {
+        "title": "Insecure CORS Configuration",
+        "severity": "HIGH",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "vuln20.js",
+          "line": 31,
+          "snippet": "res.setHeader(\"Access-Control-Allow-Origin\", \"*\");"
+        },
+        "explanation": "The CORS configuration allows any origin to make requests with credentials. This can be exploited by malicious origins to bypass security measures such as CSRF protections.",
+        "recommendation": "Restrict Access-Control-Allow-Origin to trusted domains and avoid setting Access-Control-Allow-Credentials if possible."
+      },
+      {
+        "title": "SQL Injection Vulnerability",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "vuln20.js",
+          "line": 87,
+          "snippet": "const sql = \"SELECT id,email,role FROM users WHERE email = '\" + email + \"'\";"
+        },
+        "explanation": "User input is directly concatenated into the SQL query string without proper sanitization or parameterized queries. This allows for injection of arbitrary SQL code.",
+        "recommendation": "Use parameterized queries or ORM methods that handle escaping automatically."
+      },
+      {
+        "title": "Command Injection Vulnerability",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "vuln20.js",
+          "line": 167,
+          "snippet": "exec(`echo ${msg}`, { timeout: 1000 }, (err, stdout, stderr) => {"
+        },
+        "explanation": "User input is interpolated directly into a system command execution. This can lead to arbitrary shell commands being executed.",
+        "recommendation": "Sanitize and validate user input before executing external processes."
+      },
+      {
+        "title": "Path Traversal Vulnerability",
+        "severity": "HIGH",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "vuln20.js",
+          "line": 125,
+          "snippet": "const p = path.join(base, name);"
+        },
+        "explanation": "The file path is constructed using user-controlled input without proper validation or sanitization. This can be used to access arbitrary files on the server.",
+        "recommendation": "Validate and sanitize file paths before using them to prevent traversal attacks."
+      },
+      {
+        "title": "Insecure Password Hashing",
+        "severity": "HIGH",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "vuln20.js",
+          "line": 147,
+          "snippet": "const passwordHash = crypto.createHash(\"md5\").update(password).digest(\"hex\");"
+        },
+        "explanation": "Weak hashing algorithm (MD5) is used for storing passwords. MD5 is known to be insecure and vulnerable to rainbow table attacks.",
+        "recommendation": "Use a strong, salted hashing algorithm such as bcrypt or scrypt."
+      }
+    ]
+  }
+}

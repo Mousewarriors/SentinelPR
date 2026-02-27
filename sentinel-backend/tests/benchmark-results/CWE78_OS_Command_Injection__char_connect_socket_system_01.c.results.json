@@ -1,0 +1,10 @@
+{
+  "meta": {
+    "repo": "juliet-c",
+    "relPath": "testcases/CWE78_OS_Command_Injection/s01/CWE78_OS_Command_Injection__char_connect_socket_system_01.c",
+    "lang": "c"
+  },
+  "verdict": "PASS",
+  "findingCount": 0,
+  "findings": []
+}

@@ -1,0 +1,75 @@
+Auditing test4.js (Subtle Suite)...
+
+--- [MARCKDOWN SUMMARY] ---
+### ✅ PASS — No blocking security issues detected
+Plan: **SIMULATION** (0/999 PRs)
+
+**Summary**
+* 0 issue(s) detected by static analysis (Authoritative)
+* 4 issue(s) identified by AI review (Advisory)
+* Status: Tier 1 (Static): ✅ | Tier 2 (AI): ✅
+
+---
+
+### 🛡️ Findings Details
+
+
+#### 🟠 HIGH: Insecure CORS Configuration
+- **Source**: AI (T2)
+- **File**: `test4.js` (Line 8)
+- **Evidence**: `res.setHeader("Access-Control-Allow-Origin", "*"); res.setHeader("Access-Control-Allow-Credentials",`
+- **Impact**: The CORS policy sets the 'Access-Control-Allow-Origin' header to a wildcard '*', allowing any origin to access resources, and sets 'Access-Control-Allow-Credentials' to true. This can lead to sensitive data being exposed across domains in browsers that enforce stricter security policies.
+- **Recommendation**: Restrict the Access-Control-Allow-Origin header to specific origins or consider using non-wildcard CORS policy.
+
+
+---
+
+#### 🔴 CRITICAL: CSRF Vulnerability
+- **Source**: AI (T2)
+- **File**: `test4.js` (Line 18)
+- **Evidence**: `app.post("/api/transfer", (req, res) => {     const { to, amount } = req.body;     const from = req.`
+- **Impact**: Sensitive state-changing operations such as the /api/transfer endpoint do not include CSRF protection. Without proper validation through CSRF tokens or SameSite cookie settings, this operation can be exploited by malicious actors to perform unauthorized transactions.
+- **Recommendation**: Implement CSRF protection using anti-forgery tokens or same-site cookies.
+
+
+---
+
+#### 🟡 MEDIUM: Weak Random Token Generation
+- **Source**: AI (T2)
+- **File**: `test4.js` (Line 32)
+- **Evidence**: `const token = Math.random().toString(36).substring(2);`
+- **Impact**: The password reset functionality uses 'Math.random()' to generate tokens, which is not cryptographically secure. Such a random number generator can produce predictable and weak tokens that are susceptible to brute-force attacks.
+- **Recommendation**: Use a cryptographically secure pseudo-random number generator (CSPRNG) like crypto.randomBytes() for generating tokens.
+
+
+---
+
+#### 🔴 CRITICAL: Sensitive Data Exposure in Error Responses
+- **Source**: AI (T2)
+- **File**: `test4.js` (Line 45)
+- **Evidence**: `res.status(500).json({     status: "error",     stack: e.stack,     internal_code: MASTER_KEY`
+- **Impact**: Error responses contain detailed information including the master key (internal_code) and full stack trace, which can be intercepted by attackers to gain insights into system configuration and cause further security breaches.
+- **Recommendation**: Remove sensitive data from error messages and consider using generic error pages or logging errors separately.
+
+
+
+---
+
+### 🔍 Trust Signals
+- **Tier 1 (Static)**: Authoritative pattern matcher. High precision.
+- **Tier 2 (AI)**: qwen2.5:14b audit. probabilistic reasoning.
+- **Note**: All AI findings require human verification and do not independently block merges.
+
+--- [AI FINDINGS] ---
+
+[HIGH] Insecure CORS Configuration
+Explanation: The CORS policy sets the 'Access-Control-Allow-Origin' header to a wildcard '*', allowing any origin to access resources, and sets 'Access-Control-Allow-Credentials' to true. This can lead to sensitive data being exposed across domains in browsers that enforce stricter security policies.
+
+[CRITICAL] CSRF Vulnerability
+Explanation: Sensitive state-changing operations such as the /api/transfer endpoint do not include CSRF protection. Without proper validation through CSRF tokens or SameSite cookie settings, this operation can be exploited by malicious actors to perform unauthorized transactions.
+
+[MEDIUM] Weak Random Token Generation
+Explanation: The password reset functionality uses 'Math.random()' to generate tokens, which is not cryptographically secure. Such a random number generator can produce predictable and weak tokens that are susceptible to brute-force attacks.
+
+[CRITICAL] Sensitive Data Exposure in Error Responses
+Explanation: Error responses contain detailed information including the master key (internal_code) and full stack trace, which can be intercepted by attackers to gain insights into system configuration and cause further security breaches.

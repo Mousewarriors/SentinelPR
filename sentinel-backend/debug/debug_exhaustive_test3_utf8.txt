@@ -1,0 +1,79 @@
+﻿Running EXHAUSTIVE analysis on test3.js...
+[Tier 2] Calling local Ollama (qwen2.5:14b)...
+
+--- RESULT ---
+{
+  "status": "ran",
+  "result": {
+    "engine": "local",
+    "model": "qwen2.5:14b",
+    "summary": "The provided code includes several critical security vulnerabilities such as IDOR, SSRF, SQL injection, and XSS.",
+    "findings": [
+      {
+        "title": "IDOR in User Profile Endpoint",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "./vuln20.js",
+          "line": 53,
+          "snippet": "app.get(\"/api/users/:id\", (req, res) => { const u = users.find((x) => x.id === req.params.id); if (!u) return res.status(404).json({ error: \"not found\" }); res.json({ id: u.id, email: u.email, role: u.role, isAdmin: u.isAdmin }); })"
+        },
+        "explanation": "The endpoint does not check user permissions when fetching a user profile by ID. An attacker could exploit this to retrieve other users' profiles.",
+        "recommendation": "Add authentication and authorization checks to ensure only the target user can access their own profile."
+      },
+      {
+        "title": "SSRF in URL Preview",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "./vuln20.js",
+          "line": 68,
+          "snippet": "app.get(\"/api/tools/preview\", async (req, res) => { const url = String(req.query.url || \"\"); if (!url) return res.status(400).json({ error: \"missing url\" }); const r = await fetch(url, { method: \"GET\", redirect: \"follow\", headers: { \"User-Agent\": \"PreviewBot/1.0\" } }); const text = await r.text(); res.json({ url, finalUrl: r.url, status: r.status, snippet: text.slice(0, 200) }); })"
+        },
+        "explanation": "The endpoint allows an attacker to perform SSRF attacks by fetching arbitrary URLs.",
+        "recommendation": "Implement strict validation and whitelisting of allowed domains for URL preview requests."
+      },
+      {
+        "title": "SQL Injection in Query Endpoint",
+        "severity": "HIGH",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "./vuln20.js",
+          "line": 85,
+          "snippet": "app.get(\"/api/search\", (req, res) => { const q = String(req.query.q || \"\"); const re = new RegExp(q, \"i\"); const matches = invoices.filter((inv) => re.test(inv.notes)).map((x) => x.id); res.json({ matches }); })"
+        },
+        "explanation": "The endpoint uses user input to construct a regular expression without proper sanitization, which can lead to ReDoS attacks and potentially SQL injection if integrated with database queries.",
+        "recommendation": "Sanitize and validate all inputs used in constructing expressions or queries."
+      },
+      {
+        "title": "Stored XSS in Invoice Notes",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "./vuln20.js",
+          "line": 114,
+          "snippet": "app.post(\"/api/invoices/:id/notes\", (req, res) => { const inv = invoices.find((i) => i.id === req.params.id); if (!inv) return res.status(404).json({ error: \"not found\" }); inv.notes = String(req.body.notes || \"\"); res.json({ ok: true }); })"
+        },
+        "explanation": "The endpoint allows an attacker to store malicious scripts in invoice notes, which can be executed later when viewed by other users.",
+        "recommendation": "Escape all HTML output or use a secure template engine that escapes user inputs."
+      },
+      {
+        "title": "Weak Password Hashing",
+        "severity": "LOW",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "./vuln20.js",
+          "line": 157,
+          "snippet": "app.post(\"/api/register\", (req, res) => { const email = String(req.body.email || \"\"); const password = String(req.body.password || \"\"); const id = \"user-\" + (users.length + 1); const passwordHash = crypto.createHash(\"md5\").update(password).digest(\"hex\"); users.push({ id, email, role: \"user\", isAdmin: false, passwordHash }); res.json({ ok: true, id }); })"
+        },
+        "explanation": "The endpoint uses MD5 for hashing passwords, which is insecure and can be easily broken.",
+        "recommendation": "Switch to a more secure hashing algorithm like bcrypt."
+      }
+    ]
+  }
+}

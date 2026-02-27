@@ -1,0 +1,17 @@
+# dependencies
+node_modules/
+
+# logs
+*.log
+server.log
+
+# env / secrets
+.env
+*.pem
+
+# OS/editor
+.DS_Store
+.vscode/
+
+# dedupe
+.dedupe.json

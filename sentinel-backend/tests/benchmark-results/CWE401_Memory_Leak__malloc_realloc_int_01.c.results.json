@@ -1,0 +1,10 @@
+{
+  "meta": {
+    "repo": "juliet-c",
+    "relPath": "testcases/CWE401_Memory_Leak/s01/CWE401_Memory_Leak__malloc_realloc_int_01.c",
+    "lang": "c"
+  },
+  "verdict": "PASS",
+  "findingCount": 0,
+  "findings": []
+}

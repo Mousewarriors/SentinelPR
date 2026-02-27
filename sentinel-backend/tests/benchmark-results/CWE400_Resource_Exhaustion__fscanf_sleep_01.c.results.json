@@ -1,0 +1,10 @@
+{
+  "meta": {
+    "repo": "juliet-c",
+    "relPath": "testcases/CWE400_Resource_Exhaustion/s01/CWE400_Resource_Exhaustion__fscanf_sleep_01.c",
+    "lang": "c"
+  },
+  "verdict": "PASS",
+  "findingCount": 0,
+  "findings": []
+}

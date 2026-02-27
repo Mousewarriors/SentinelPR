@@ -1,0 +1,95 @@
+{
+  "meta": {
+    "repo": "BenchmarkingJava",
+    "relPath": "src/main/java/org/owasp/benchmark/testcode/BenchmarkTest00003.java",
+    "lang": "java"
+  },
+  "verdict": "WARN",
+  "findingCount": 6,
+  "findings": [
+    {
+      "ruleId": "A201_WEAK_SESSION_COOKIE",
+      "kind": "WARN",
+      "severity": "HIGH",
+      "status": "NEW",
+      "title": "Session cookie may be missing security attributes",
+      "description": "Session cookies may be missing secure attributes.",
+      "risk": "Cookies without proper flags are more vulnerable to theft or misuse.",
+      "confidenceRationale": "Cookie-related code was modified, but the analysis cannot confirm runtime behavior or environment defaults.",
+      "recommendation": "Ensure secure, httpOnly, and appropriate sameSite attributes are set for session cookies.",
+      "file": "BenchmarkTest00003.java",
+      "line": 38,
+      "snippet": "userCookie.setMaxAge(60 * 3); // Store cookie for 3 minutes"
+    },
+    {
+      "ruleId": "A201_WEAK_SESSION_COOKIE",
+      "kind": "WARN",
+      "severity": "HIGH",
+      "status": "NEW",
+      "title": "Session cookie may be missing security attributes",
+      "description": "Session cookies may be missing secure attributes.",
+      "risk": "Cookies without proper flags are more vulnerable to theft or misuse.",
+      "confidenceRationale": "Cookie-related code was modified, but the analysis cannot confirm runtime behavior or environment defaults.",
+      "recommendation": "Ensure secure, httpOnly, and appropriate sameSite attributes are set for session cookies.",
+      "file": "BenchmarkTest00003.java",
+      "line": 39,
+      "snippet": "userCookie.setSecure(true);"
+    },
+    {
+      "ruleId": "A201_WEAK_SESSION_COOKIE",
+      "kind": "WARN",
+      "severity": "HIGH",
+      "status": "NEW",
+      "title": "Session cookie may be missing security attributes",
+      "description": "Session cookies may be missing secure attributes.",
+      "risk": "Cookies without proper flags are more vulnerable to theft or misuse.",
+      "confidenceRationale": "Cookie-related code was modified, but the analysis cannot confirm runtime behavior or environment defaults.",
+      "recommendation": "Ensure secure, httpOnly, and appropriate sameSite attributes are set for session cookies.",
+      "file": "BenchmarkTest00003.java",
+      "line": 40,
+      "snippet": "userCookie.setHttpOnly(true);"
+    },
+    {
+      "ruleId": "A201_WEAK_SESSION_COOKIE",
+      "kind": "WARN",
+      "severity": "HIGH",
+      "status": "NEW",
+      "title": "Session cookie may be missing security attributes",
+      "description": "Session cookies may be missing secure attributes.",
+      "risk": "Cookies without proper flags are more vulnerable to theft or misuse.",
+      "confidenceRationale": "Cookie-related code was modified, but the analysis cannot confirm runtime behavior or environment defaults.",
+      "recommendation": "Ensure secure, httpOnly, and appropriate sameSite attributes are set for session cookies.",
+      "file": "BenchmarkTest00003.java",
+      "line": 41,
+      "snippet": "userCookie.setPath(request.getRequestURI());"
+    },
+    {
+      "ruleId": "A201_WEAK_SESSION_COOKIE",
+      "kind": "WARN",
+      "severity": "HIGH",
+      "status": "NEW",
+      "title": "Session cookie may be missing security attributes",
+      "description": "Session cookies may be missing secure attributes.",
+      "risk": "Cookies without proper flags are more vulnerable to theft or misuse.",
+      "confidenceRationale": "Cookie-related code was modified, but the analysis cannot confirm runtime behavior or environment defaults.",
+      "recommendation": "Ensure secure, httpOnly, and appropriate sameSite attributes are set for session cookies.",
+      "file": "BenchmarkTest00003.java",
+      "line": 42,
+      "snippet": "userCookie.setDomain(new java.net.URL(request.getRequestURL().toString()).getHost());"
+    },
+    {
+      "ruleId": "W127_BASE64_SECRET_LIKE",
+      "kind": "WARN",
+      "severity": "MEDIUM",
+      "status": "NEW",
+      "title": "Base64-encoded value near secret-like key",
+      "description": "A base64-encoded value was assigned to a secret-like key.",
+      "risk": "Base64 is often used to encode secrets, not protect them. If sensitive, this may expose credentials.",
+      "confidenceRationale": "Base64 values are common and ambiguous without context.",
+      "recommendation": "Confirm whether the value is sensitive. If it is, rotate it and store it securely outside source control.",
+      "file": "BenchmarkTest00003.java",
+      "line": 111,
+      "snippet": "} catch (java.security.NoSuchAlgorithmException e) {"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "repo": "BenchmarkingPython",
+    "relPath": "testcode/BenchmarkTest00002.py",
+    "lang": "python"
+  },
+  "verdict": "WARN",
+  "findingCount": 1,
+  "findings": [
+    {
+      "ruleId": "F913_FILENAME_NOT_SANITIZED",
+      "kind": "WARN",
+      "severity": "MEDIUM",
+      "status": "NEW",
+      "title": "Filename used without obvious sanitization",
+      "description": "Upload filename appears used without obvious normalization/sanitization nearby.",
+      "risk": "Unsanitized filenames can include traversal sequences, unicode tricks, or dangerous extensions.",
+      "confidenceRationale": "Heuristic: sanitization may exist in shared helpers; still worth review.",
+      "recommendation": "Normalize filenames, strip path separators, enforce allowlisted extensions, and generate server-side storage names.",
+      "file": "BenchmarkTest00002.py",
+      "line": 26,
+      "snippet": "response.set_cookie('BenchmarkTest00002', 'Filename',"
+    }
+  ]
+}

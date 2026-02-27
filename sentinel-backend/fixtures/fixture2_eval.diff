@@ -1,0 +1,7 @@
+diff --git a/app.js b/app.js
+index e69de29..e123456 100644
+--- a/app.js
++++ b/app.js
+@@ -10,1 +10,2 @@
++const data = eval(req.body.payload);
++console.log(data);

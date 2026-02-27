@@ -1,0 +1,10 @@
+{
+  "meta": {
+    "repo": "juliet-c",
+    "relPath": "testcases/CWE134_Uncontrolled_Format_String/s01/CWE134_Uncontrolled_Format_String__char_connect_socket_printf_01.c",
+    "lang": "c"
+  },
+  "verdict": "PASS",
+  "findingCount": 0,
+  "findings": []
+}

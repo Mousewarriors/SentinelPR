@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "repo": "BenchmarkingJava",
+    "relPath": "src/main/java/org/owasp/benchmark/testcode/BenchmarkTest00009.java",
+    "lang": "java"
+  },
+  "verdict": "WARN",
+  "findingCount": 1,
+  "findings": [
+    {
+      "ruleId": "W127_BASE64_SECRET_LIKE",
+      "kind": "WARN",
+      "severity": "MEDIUM",
+      "status": "NEW",
+      "title": "Base64-encoded value near secret-like key",
+      "description": "A base64-encoded value was assigned to a secret-like key.",
+      "risk": "Base64 is often used to encode secrets, not protect them. If sensitive, this may expose credentials.",
+      "confidenceRationale": "Base64 values are common and ambiguous without context.",
+      "recommendation": "Confirm whether the value is sensitive. If it is, rotate it and store it securely outside source control.",
+      "file": "BenchmarkTest00009.java",
+      "line": 110,
+      "snippet": "} catch (java.security.NoSuchAlgorithmException e) {"
+    }
+  ]
+}

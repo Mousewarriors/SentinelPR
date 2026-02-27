@@ -1,0 +1,26 @@
+{
+    "fixture1_harmless.diff": {
+        "expected_verdict": "success",
+        "must_find": []
+    },
+    "fixture2_eval.diff": {
+        "expected_verdict": "failure",
+        "must_find": [
+            "eval"
+        ]
+    },
+    "fixture3_auth_logic.diff": {
+        "expected_verdict": "success",
+        "must_find_tier2": [
+            "Email Domain",
+            "Bypass"
+        ]
+    },
+    "fixture4_b64_secret.diff": {
+        "expected_verdict": "success",
+        "must_find_tier2": [
+            "secret",
+            "Base64"
+        ]
+    }
+}

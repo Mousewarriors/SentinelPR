@@ -1,0 +1,15 @@
+diff --git a/auth.js b/auth.js
+index e69de29..e123456 100644
+--- a/auth.js
++++ b/auth.js
+@@ -5,4 +5,8 @@
+ function checkAccess(user, resource) {
+-  if (user.role === 'admin') return true;
+-  return user.permissions.includes(resource);
++  // New bypass for support team
++  if (user.email.endsWith('@company.com')) {
++    return true; 
++  }
++  if (user.role === 'admin') return true;
++  return user.permissions.includes(resource);
+ }

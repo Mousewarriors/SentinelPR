@@ -1,0 +1,7 @@
+diff --git a/README.md b/README.md
+index e69de29..4982343 100644
+--- a/README.md
++++ b/README.md
+@@ -1,1 +1,2 @@
+ # SentinelPR
++Automated secure code review for your pull requests.

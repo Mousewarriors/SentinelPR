@@ -1,0 +1,41 @@
+diff --git a/src/db.js b/src/db.js
+index 1234567..89abcdf 100644
+--- a/src/db.js
++++ b/src/db.js
+@@ -10,10 +10,40 @@
+-const oldQuery = "SELECT 1";
++const safeQuery = "SELECT * FROM users WHERE id=$1";
++db.query(safeQuery, [req.query.id]);
++
++// SQL001 FAIL
++db.query(`SELECT * FROM users WHERE id=${req.query.id}`);
++
++// SQL002 FAIL
++db.query("SELECT * FROM users WHERE id=" + req.query.id);
++
++// SQL003 FAIL
++prisma.$queryRawUnsafe("SELECT * FROM users WHERE id=" + id);
++
++// SQL004 FAIL
++db.execute(`SELECT * FROM users WHERE name='${req.body.name}'`);
++
++// NOSQL001 FAIL
++db.collection('users').find({ "$where": `this.name == "${req.query.name}"` });
++
++// NOSQL002 FAIL
++Users.findOne({ [req.query.field]: "value" });
++
++// NOSQL003 FAIL
++collection.find(JSON.parse(req.body.query));
++
++// Near misses (Should not fire FAIL)
++// db.query(`SELECT * FROM users WHERE id=${id}`);
++const sql = `SELECT * FROM users WHERE id=${id}`;
++const count = 1 + 2;
++
++/* 
++   Direct request input to safe query 
++*/
++db.query("SELECT * FROM users WHERE id=$1", [req.query.id]);
++
++prisma.$queryRaw`SELECT * FROM users WHERE email=${email}`;

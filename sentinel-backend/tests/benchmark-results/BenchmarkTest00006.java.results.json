@@ -1,0 +1,10 @@
+{
+  "meta": {
+    "repo": "BenchmarkingJava",
+    "relPath": "src/main/java/org/owasp/benchmark/testcode/BenchmarkTest00006.java",
+    "lang": "java"
+  },
+  "verdict": "PASS",
+  "findingCount": 0,
+  "findings": []
+}

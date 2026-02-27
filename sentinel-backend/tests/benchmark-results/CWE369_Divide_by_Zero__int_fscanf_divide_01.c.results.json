@@ -1,0 +1,10 @@
+{
+  "meta": {
+    "repo": "juliet-c",
+    "relPath": "testcases/CWE369_Divide_by_Zero/s01/CWE369_Divide_by_Zero__int_fscanf_divide_01.c",
+    "lang": "c"
+  },
+  "verdict": "PASS",
+  "findingCount": 0,
+  "findings": []
+}

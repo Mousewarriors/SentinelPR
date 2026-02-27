@@ -1,0 +1,283 @@
+﻿Running EXHAUSTIVE analysis on test3.js...
+[Tier 2] Starting TRIPLE-PASS Audit on 2 chunks...
+[Tier 2] --- PASS: Injection & Infrastructure ---
+[Tier 2] Auditing chunk 1/2 for Injection & Infrastructure...
+[Tier 2] Auditing chunk 2/2 for Injection & Infrastructure...
+[Tier 2] --- PASS: Logic & Authorization ---
+[Tier 2] Auditing chunk 1/2 for Logic & Authorization...
+[Tier 2] Auditing chunk 2/2 for Logic & Authorization...
+[Tier 2] --- PASS: Crypto & Configuration ---
+[Tier 2] Auditing chunk 1/2 for Crypto & Configuration...
+[Tier 2] Auditing chunk 2/2 for Crypto & Configuration...
+
+--- RESULT ---
+{
+  "status": "ran",
+  "result": {
+    "engine": "local",
+    "model": "qwen2.5:14b",
+    "summary": "Triple-pass audit complete. Found 20 unique issues across 2 chunks.",
+    "findings": [
+      {
+        "title": "SQL Injection Vulnerability in User Search Endpoint",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "test/test (Chunk 1/2)",
+          "line": 54,
+          "snippet": "const sql = \"SELECT id,email,role FROM users WHERE email = '\" + email + \"'\";"
+        },
+        "explanation": "The endpoint constructs a SQL query by directly concatenating user input into the query string. This can lead to SQL injection if an attacker injects malicious SQL code.",
+        "recommendation": "Use parameterized queries or ORM functions that safely handle input values."
+      },
+      {
+        "title": "SQL Injection Vulnerability in Invoice List Endpoint",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "test/test (Chunk 1/2)",
+          "line": 67,
+          "snippet": "const sql = \"SELECT * FROM invoices ORDER BY \" + sort + \" \" + dir;"
+        },
+        "explanation": "The endpoint constructs a SQL query by directly inserting user-provided input into the ORDER BY clause. This can lead to SQL injection and manipulation of sorting criteria.",
+        "recommendation": "Use parameterized queries or ORM functions that safely handle input values."
+      },
+      {
+        "title": "Server-Side Request Forgery (SSRF) Vulnerability in Webhook Endpoint",
+        "severity": "HIGH",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "test/test (Chunk 1/2)",
+          "line": 49,
+          "snippet": "const url = String(req.body.url || \"\");"
+        },
+        "explanation": "The endpoint allows an attacker to control the URL that is fetched via the `fetch` API. This can be used to perform SSRF attacks and potentially access internal resources.",
+        "recommendation": "Validate or restrict the URLs that can be requested by whitelisting allowed domains."
+      },
+      {
+        "title": "Server-Side Request Forgery (SSRF) Vulnerability in URL Preview Endpoint",
+        "severity": "HIGH",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "test/test (Chunk 1/2)",
+          "line": 36,
+          "snippet": "const url = String(req.query.url || \"\");"
+        },
+        "explanation": "The endpoint allows an attacker to control the URL that is fetched via the `fetch` API. This can be used to perform SSRF attacks and potentially access internal resources.",
+        "recommendation": "Validate or restrict the URLs that can be requested by whitelisting allowed domains."
+      },
+      {
+        "title": "Reflected Cross-Site Scripting (XSS) Vulnerability in Help Page",
+        "severity": "HIGH",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "test/test (Chunk 1/2)",
+          "line": 89,
+          "snippet": "res.end(`<!doctype html><html><body>\n<h2>Help</h2>\n<div>Search: ${q}</div>\n</body></html>`);"
+        },
+        "explanation": "The endpoint directly embeds user input into the HTML response without proper sanitization, leading to a reflected XSS vulnerability.",
+        "recommendation": "Sanitize and escape all untrusted inputs before embedding them in the HTML output."
+      },
+      {
+        "title": "Stored Cross-Site Scripting (XSS)",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "test/test",
+          "line": 12,
+          "snippet": "res.end(`<!doctype html><html><body>\n    <h1>Invoice ${inv.id}</h1>\n    <p>Notes: ${inv.notes}</p>\n  </body></html>`);"
+        },
+        "explanation": "The code directly includes user-controlled input (`inv.notes`) within an HTML response without proper sanitization or escaping, allowing for stored XSS attacks.",
+        "recommendation": "Sanitize and escape all user inputs before rendering them in the HTML context. Use a template engine that automatically escapes variables."
+      },
+      {
+        "title": "Path Traversal",
+        "severity": "HIGH",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "test/test",
+          "line": 42,
+          "snippet": "const p = path.join(base, name); // ../ can escape base"
+        },
+        "explanation": "The application allows users to specify file paths via the `name` query parameter without proper validation or sanitization, enabling Path Traversal attacks.",
+        "recommendation": "Validate and sanitize all input parameters that control file system operations. Use a strict whitelist approach for allowed filenames."
+      },
+      {
+        "title": "Command Injection",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "test/test",
+          "line": 64,
+          "snippet": "exec(`echo ${msg}`, { timeout: 1000 }, (err, stdout, stderr) => {"
+        },
+        "explanation": "The application interpolates user-provided input (`msg`) directly into a shell command without proper sanitization or validation, making it vulnerable to Command Injection attacks.",
+        "recommendation": "Use safe functions like `execFile` instead of `exec`, and ensure that all inputs are properly validated and sanitized before being used in system commands."
+      },
+      {
+        "title": "Server-Side Request Forgery (SSRF)",
+        "severity": "HIGH",
+        "confidence": "MEDIUM",
+        "category": "Security",
+        "evidence": {
+          "file": "test/test",
+          "line": 52,
+          "snippet": "res.redirect(next);"
+        },
+        "explanation": "The application uses user-provided input (`next`) directly in a redirect, which could be used for Server-Side Request Forgery (SSRF) to access internal resources or perform unintended actions.",
+        "recommendation": "Validate and sanitize all inputs before using them in redirects. Use strict whitelisting to restrict allowed URLs."
+      },
+      {
+        "title": "Path Traversal",
+        "severity": "HIGH",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "test/test",
+          "line": 84,
+          "snippet": "const p = path.join(base, name); // ../ can escape base"
+        },
+        "explanation": "The application allows users to specify file paths via the `name` parameter without proper validation or sanitization, enabling Path Traversal attacks.",
+        "recommendation": "Validate and sanitize all input parameters that control file system operations. Use a strict whitelist approach for allowed filenames."
+      },
+      {
+        "title": "IDOR: Invoice Retrieval Without Ownership Check",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "./test/vuln20.js",
+          "line": 47,
+          "snippet": "app.get(\"/api/invoices/:id\", (req, res) => {"
+        },
+        "explanation": "The endpoint \"/api/invoices/:id\" allows any user to retrieve an invoice by its ID without checking the ownership of the invoice. This can lead to unauthorized access to sensitive data.",
+        "recommendation": "Add a check to ensure that the logged-in user is the owner of the invoice before returning it."
+      },
+      {
+        "title": "IDOR: User Profile Retrieval Without Authorization Check",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "./test/vuln20.js",
+          "line": 63,
+          "snippet": "app.get(\"/api/users/:id\", (req, res) => {"
+        },
+        "explanation": "The endpoint \"/api/users/:id\" allows any user to retrieve the profile of a specific user by their ID without performing an authorization check. This can lead to unauthorized access to sensitive data.",
+        "recommendation": "Add an authorization check to ensure that only authorized users (e.g., admin or the same user) can view another user's profile."
+      },
+      {
+        "title": "Privilege Escalation: Admin Actions Without Proper Checks",
+        "severity": "HIGH",
+        "confidence": "MEDIUM",
+        "category": "Security",
+        "evidence": {
+          "file": "./test/vuln20.js",
+          "line": 63,
+          "snippet": "app.get(\"/api/users/:id\", (req, res) => {"
+        },
+        "explanation": "The endpoint \"/api/users/:id\" retrieves user details and allows an attacker to potentially access admin-level information or perform actions that should be restricted to admins only. This could lead to privilege escalation if the logged-in user is not properly authenticated.",
+        "recommendation": "Implement proper role-based access control (RBAC) checks to ensure users can only view their own profile and other data they are authorized for."
+      },
+      {
+        "title": "CSRF Vulnerability in Transfer Endpoint",
+        "severity": "HIGH",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "test/test (Chunk 2/2)",
+          "line": 145,
+          "snippet": "app.post(\"/api/transfer\", (req, res) => {\n    const to = String(req.body.to || \"\");\n    const amount = Number(req.body.amount || 0);\n    transfers.push({ from: req.session.userId, to, amount, at: Date.now() });\n    res.json({ ok: true });\n});"
+        },
+        "explanation": "The POST endpoint \"/api/transfer\" allows a user to transfer funds without any CSRF protection. This means an attacker could forge requests on behalf of the authenticated user and exploit this endpoint to perform unauthorized transfers.",
+        "recommendation": "Implement CSRF tokens in all POST endpoints that modify state, such as form fields or HTTP headers."
+      },
+      {
+        "title": "Mass Assignment with Privilege Escalation",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "test/test (Chunk 2/2)",
+          "line": 178,
+          "snippet": "app.put(\"/api/me\", (req, res) => {\n    const me = users.find((u) => u.id === req.session.userId);\n    if (!me) return res.status(404).json({ error: \"no user\" });\n\n    // 20-ish: Mass assignment / privilege escalation via merging arbitrary fields\n    deepMerge(me, req.body);\n    res.json({ ok: true, user: me });\n});"
+        },
+        "explanation": "The PUT endpoint \"/api/me\" allows for mass assignment of properties to the user object. An attacker can exploit this by modifying sensitive attributes like isAdmin or passwordHash directly through a crafted request body.",
+        "recommendation": "Restrict update operations to only permitted fields and enforce strict validation on all input data, especially when dealing with potentially privileged actions."
+      },
+      {
+        "title": "IDOR Vulnerability in Invoice Notes Endpoint",
+        "severity": "MEDIUM",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "test/test (Chunk 2/2)",
+          "line": 76,
+          "snippet": "app.post(\"/api/invoices/:id/notes\", (req, res) => {\n    const inv = invoices.find((i) => i.id === req.params.id);\n    if (!inv) return res.status(404).json({ error: \"not found\" });\n    inv.notes = String(req.body.notes || \"\");\n    res.json({ ok: true });\n});"
+        },
+        "explanation": "The POST endpoint \"/api/invoices/:id/notes\" allows any authenticated user to modify the notes of an invoice identified by its ID. Without proper authorization checks, this can lead to unauthorized modifications.",
+        "recommendation": "Implement strict access control and ensure that only authorized users can update their own resources."
+      },
+      {
+        "title": "Hardcoded Secret Usage",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "vuln20.js",
+          "line": 47,
+          "snippet": "const INTERNAL_API_KEY = \"sk_live_hardcoded_example_key_do_not_use\";"
+        },
+        "explanation": "The code contains a hardcoded API key which could be exposed if the source code is leaked or accessed by unauthorized users. This poses a significant risk of credential compromise.",
+        "recommendation": "Store sensitive credentials in environment variables or secure vaults and never commit them to version control."
+      },
+      {
+        "title": "Weak Password Hashing (MD5)",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "test/test",
+          "line": 47,
+          "snippet": "const passwordHash = crypto.createHash(\"md5\").update(password).digest(\"hex\");"
+        },
+        "explanation": "MD5 is a weak hashing algorithm that has been compromised and should never be used for cryptographic purposes, especially not for password storage. Using MD5 exposes passwords to dictionary attacks and rainbow table lookups.",
+        "recommendation": "Use strong hashing algorithms like bcrypt, scrypt, or Argon2. These algorithms are designed to be slow and memory-intensive, making it difficult for attackers to perform brute-force or precomputed attacks."
+      },
+      {
+        "title": "Predictable Reset Token (Math.random)",
+        "severity": "HIGH",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "test/test",
+          "line": 58,
+          "snippet": "const token = Math.random().toString(16).slice(2, 10);"
+        },
+        "explanation": "Using `Math.random()` for generating security tokens can result in predictable tokens if multiple requests are made closely together. This can lead to unauthorized access or privilege escalation attacks.",
+        "recommendation": "Use a secure random number generator provided by the crypto module (e.g., `crypto.randomBytes(size)`) to generate non-predictable and strong reset tokens."
+      },
+      {
+        "title": "Sensitive Data Exposure in Error Logs",
+        "severity": "HIGH",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "test/test",
+          "line": 96,
+          "snippet": "\"apiKey\": INTERNAL_API_KEY"
+        },
+        "explanation": "The error response includes sensitive data such as an API key, which can be exposed to users or logged in the server logs. This exposes internal secrets and credentials to potential attackers.",
+        "recommendation": "Ensure that no sensitive information is returned in error responses or logged in application logs. Use environment variables for storing secret keys and avoid referencing them directly in code."
+      }
+    ]
+  }
+}

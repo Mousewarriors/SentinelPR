@@ -1,0 +1,213 @@
+﻿Running EXHAUSTIVE analysis on test3.js...
+[Tier 2] Splitting diff into 3 chunks for qwen2.5:14b...
+[Tier 2] Auditing chunk 1/3...
+[Tier 2] Auditing chunk 2/3...
+[Tier 2] Auditing chunk 3/3...
+
+--- RESULT ---
+{
+  "status": "ran",
+  "reason": null,
+  "result": {
+    "engine": "local",
+    "model": "qwen2.5:14b",
+    "summary": "Integrated analysis of 3 chunks. Found 15 issues.",
+    "findings": [
+      {
+        "title": "IDOR: Invoice by id without ownership check",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "vuln20.js",
+          "line": 31,
+          "snippet": "app.get(\"/api/invoices/:id\", (req, res) => {"
+        },
+        "explanation": "The endpoint allows any user to retrieve an invoice by ID without verifying ownership of the invoice.",
+        "recommendation": "Add a check in the GET /api/invoices/:id route to ensure that the current user is the owner of the requested invoice before returning it."
+      },
+      {
+        "title": "SSRF via API Call Preview",
+        "severity": "HIGH",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "/api/tools/preview",
+          "line": 18,
+          "snippet": "const r = await fetch(url, { method: \"GET\", redirect: \"follow\", headers: { \"User-Agent\": \"PreviewBot/1.0\" } });"
+        },
+        "explanation": "The endpoint allows fetching arbitrary URLs controlled by the user without proper validation or sanitization.",
+        "recommendation": "Implement strict URL validation and limit fetch actions to trusted domains only."
+      },
+      {
+        "title": "SSRF via Webhook Sender",
+        "severity": "HIGH",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "/api/webhook/send",
+          "line": 23,
+          "snippet": "const r = await fetch(url, { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify(payload) });"
+        },
+        "explanation": "The endpoint allows posting to arbitrary URLs controlled by the user without proper validation or sanitization.",
+        "recommendation": "Implement strict URL validation and limit fetch actions to trusted domains only."
+      },
+      {
+        "title": "SQL Injection via User Input",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "/api/users/search",
+          "line": 14,
+          "snippet": "const sql = \"SELECT id,email,role FROM users WHERE email = '\" + email + \"'\";"
+        },
+        "explanation": "The SQL query directly concatenates user input without sanitization or parameterized queries.",
+        "recommendation": "Use prepared statements with placeholders for all user inputs."
+      },
+      {
+        "title": "Order By Injection",
+        "severity": "MEDIUM",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "/api/invoices/list",
+          "line": 17,
+          "snippet": "const sql = \"SELECT * FROM invoices ORDER BY '\" + sort + \" '\" + dir;"
+        },
+        "explanation": "The SQL query dynamically includes a column/expression specified by the user without proper sanitization.",
+        "recommendation": "Limit order-by fields to predefined safe values or use parameterized queries."
+      },
+      {
+        "title": "Reflected XSS via Query Parameter",
+        "severity": "HIGH",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "/help",
+          "line": 13,
+          "snippet": "<div>Search: ${q}</div>"
+        },
+        "explanation": "The query parameter is directly reflected in the HTML response without any sanitization.",
+        "recommendation": "Sanitize and escape all user inputs before rendering them to the page."
+      },
+      {
+        "title": "Stored XSS via Invoice Notes",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "/api/invoices/:id/notes",
+          "line": 13,
+          "snippet": "inv.notes = String(req.body.notes || \"\");"
+        },
+        "explanation": "User-controlled input is saved to the database and later rendered unsanitized.",
+        "recommendation": "Sanitize all user inputs before storing them in the database."
+      },
+      {
+        "title": "Path Traversal Vulnerability",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "/api/files/read",
+          "line": 15,
+          "snippet": "const p = path.join(base, name);"
+        },
+        "explanation": "The endpoint allows reading arbitrary files by manipulating the 'name' parameter.",
+        "recommendation": "Validate and sanitize user inputs to prevent directory traversal patterns."
+      },
+      {
+        "title": "Path Traversal for File Writing",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "/api/files/write",
+          "line": 15,
+          "snippet": "const p = path.join(base, name);"
+        },
+        "explanation": "The endpoint allows writing to arbitrary files by manipulating the 'name' parameter.",
+        "recommendation": "Validate and sanitize user inputs to prevent directory traversal patterns."
+      },
+      {
+        "title": "Open Redirect Vulnerability",
+        "severity": "LOW",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "/r",
+          "line": 14,
+          "snippet": "res.redirect(next);"
+        },
+        "explanation": "The endpoint redirects to any URL specified by the user without proper validation.",
+        "recommendation": "Implement strict URL validation and limit redirect actions to trusted domains only."
+      },
+      {
+        "title": "Command Injection Vulnerability",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "/api/tools/echo",
+          "line": 3,
+          "snippet": "exec(`echo ${msg}`, { timeout: 1000 }, (err, stdout, stderr) => {"
+        },
+        "explanation": "User input is directly interpolated into a shell command without proper sanitization or validation.",
+        "recommendation": "Use a safe library like `child_process.execFile` with strict arguments and avoid string interpolation."
+      },
+      {
+        "title": "Weak Password Hashing",
+        "severity": "HIGH",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "/api/register",
+          "line": 6,
+          "snippet": "const passwordHash = crypto.createHash(\"md5\").update(password).digest(\"hex\");"
+        },
+        "explanation": "Uses a weak hashing algorithm (MD5) for storing passwords.",
+        "recommendation": "Use a strong cryptographic hashing function such as bcrypt or Argon2."
+      },
+      {
+        "title": "Predictable Reset Token Generation",
+        "severity": "MEDIUM",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "/api/reset/request",
+          "line": 4,
+          "snippet": "const token = Math.random().toString(16).slice(2, 10);"
+        },
+        "explanation": "Uses a weak and predictable method to generate reset tokens.",
+        "recommendation": "Generate secure random tokens using `crypto.randomBytes`."
+      },
+      {
+        "title": "Mass Assignment Vulnerability",
+        "severity": "HIGH",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "/api/me",
+          "line": 7,
+          "snippet": "deepMerge(me, req.body);"
+        },
+        "explanation": "Allows arbitrary fields to be merged into a user object via PUT request.",
+        "recommendation": "Validate and whitelist specific fields that can be updated."
+      },
+      {
+        "title": "ReDoS Vulnerability",
+        "severity": "HIGH",
+        "confidence": "MEDIUM",
+        "category": "Security",
+        "evidence": {
+          "file": "/api/search",
+          "line": 4,
+          "snippet": "const re = new RegExp(q, \"i\");"
+        },
+        "explanation": "User-controlled regular expression can cause catastrophic backtracking.",
+        "recommendation": "Implement a safe regex pattern or use libraries that prevent ReDoS attacks."
+      }
+    ]
+  }
+}

@@ -1,0 +1,146 @@
+﻿Running EXHAUSTIVE analysis on test3.js...
+[Tier 2] Splitting diff into 1 chunks for qwen2.5:14b...
+[Tier 2] Auditing chunk 1/1...
+
+--- RESULT ---
+{
+  "status": "ran",
+  "reason": null,
+  "result": {
+    "engine": "local",
+    "model": "qwen2.5:14b",
+    "summary": "Integrated analysis of 1 chunks. Found 10 issues.",
+    "findings": [
+      {
+        "title": "IDOR: Invoice Retrieval Without Ownership Check",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "vuln20.js",
+          "line": 35,
+          "snippet": "app.get(\"/api/invoices/:id\", (req, res) => {"
+        },
+        "explanation": "The API endpoint allows any user to retrieve an invoice by ID without checking if the requesting user is authorized.",
+        "recommendation": "Implement ownership checks before allowing access to invoices."
+      },
+      {
+        "title": "SSRF: Arbitrary URL Fetching",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "vuln20.js",
+          "line": 78,
+          "snippet": "app.get(\"/api/tools/preview\", async (req, res) => {"
+        },
+        "explanation": "The endpoint allows users to fetch content from any URL they provide, potentially leading to SSRF attacks.",
+        "recommendation": "Sanitize and validate the URLs before fetching."
+      },
+      {
+        "title": "SQL Injection: Email Search Query",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "vuln20.js",
+          "line": 139,
+          "snippet": "const email = String(req.query.email || \"\");"
+        },
+        "explanation": "The endpoint constructs a SQL query using user input without proper sanitization.",
+        "recommendation": "Use parameterized queries to prevent SQL injection."
+      },
+      {
+        "title": "SQL Injection: Dynamic Sorting",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "vuln20.js",
+          "line": 153,
+          "snippet": "const sort = String(req.query.sort || \"amount\");"
+        },
+        "explanation": "The endpoint allows users to specify the sorting column and direction, leading to potential SQL injection.",
+        "recommendation": "Validate user input for allowed columns and directions."
+      },
+      {
+        "title": "XSS: Reflected Query in HTML",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "vuln20.js",
+          "line": 185,
+          "snippet": "const q = String(req.query.q || \"\");"
+        },
+        "explanation": "The endpoint reflects user input directly into the HTML output without sanitization.",
+        "recommendation": "Sanitize and escape all user inputs before reflecting them in HTML."
+      },
+      {
+        "title": "XSS: Stored Notes Vulnerability",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "vuln20.js",
+          "line": 149,
+          "snippet": "app.put(\"/api/me\", (req, res) => {"
+        },
+        "explanation": "User-controlled input is stored and later reflected in HTML without proper sanitization.",
+        "recommendation": "Sanitize and escape all user inputs before storing them."
+      },
+      {
+        "title": "Path Traversal: Arbitrary File Reading",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "vuln20.js",
+          "line": 165,
+          "snippet": "const name = String(req.query.name || \"example.txt\");"
+        },
+        "explanation": "The endpoint allows users to specify the file path for reading using relative paths.",
+        "recommendation": "Validate and sanitize user input for file paths."
+      },
+      {
+        "title": "Path Traversal: Arbitrary File Writing",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "vuln20.js",
+          "line": 197,
+          "snippet": "const name = String(req.body.name || \"out.txt\");"
+        },
+        "explanation": "The endpoint allows users to specify the file path for writing using relative paths.",
+        "recommendation": "Validate and sanitize user input for file paths."
+      },
+      {
+        "title": "Open Redirect",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "vuln20.js",
+          "line": 213,
+          "snippet": "app.get(\"/r\", (req, res) => {"
+        },
+        "explanation": "The endpoint redirects users to any URL they provide.",
+        "recommendation": "Validate and sanitize the redirect destination."
+      },
+      {
+        "title": "Command Injection: User Input Interpolated into Shell",
+        "severity": "CRITICAL",
+        "confidence": "HIGH",
+        "category": "Security",
+        "evidence": {
+          "file": "vuln20.js",
+          "line": 237,
+          "snippet": "const msg = String(req.query.msg || \"hello\");"
+        },
+        "explanation": "The endpoint constructs and executes a shell command using user input.",
+        "recommendation": "Avoid executing shell commands with user inputs."
+      }
+    ]
+  }
+}

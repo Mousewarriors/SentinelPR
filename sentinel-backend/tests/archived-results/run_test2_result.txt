@@ -1,0 +1,137 @@
+{
+  "conclusion": "failure",
+  "annotations": [
+    {
+      "path": "",
+      "start_line": 87,
+      "end_line": 87,
+      "annotation_level": "failure",
+      "title": "[Static] Potential SSRF",
+      "message": "Detected Potential SSRF in code diff.\nFix: Validate and sanitize all user input before passing it to network fetchers, filesystem functions, or HTML responses. Use allowlists where possible."
+    },
+    {
+      "path": "",
+      "start_line": 105,
+      "end_line": 105,
+      "annotation_level": "failure",
+      "title": "[Static] Potential SQL Injection",
+      "message": "Detected Potential SQL Injection in code diff.\nFix: Use parameterized inputs, sanitize data, or use safer alternatives to dangerous functions."
+    },
+    {
+      "path": "",
+      "start_line": 115,
+      "end_line": 115,
+      "annotation_level": "notice",
+      "title": "[Static] Unsafe JSON.parse (potential)",
+      "message": "Detected Unsafe JSON.parse (potential) in code diff.\nFix: Avoid deserializing untrusted data. Use safe schema-based parsers instead."
+    },
+    {
+      "path": "",
+      "start_line": 152,
+      "end_line": 152,
+      "annotation_level": "failure",
+      "title": "[Static] Potential Path Traversal",
+      "message": "Detected Potential Path Traversal in code diff.\nFix: Validate and sanitize all user input before passing it to network fetchers, filesystem functions, or HTML responses. Use allowlists where possible."
+    },
+    {
+      "path": "",
+      "start_line": 153,
+      "end_line": 153,
+      "annotation_level": "failure",
+      "title": "[Static] Potential Path Traversal",
+      "message": "Detected Potential Path Traversal in code diff.\nFix: Validate and sanitize all user input before passing it to network fetchers, filesystem functions, or HTML responses. Use allowlists where possible."
+    }
+  ],
+  "tier1": [
+    {
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "title": "Potential SSRF",
+      "description": "Detected Potential SSRF in code diff.",
+      "evidence": {
+        "snippet": "const r = await fetch(u, {",
+        "reasoning": "Static pattern match triggered a security rule.",
+        "impact_scenario": "User-controlled input reaching a sensitive sink (network, file, or HTML) can lead to data exposure, internal probing, or client-side execution."
+      },
+      "location": {
+        "path": "",
+        "start_line": 87,
+        "end_line": 87
+      },
+      "recommended_fix": "Validate and sanitize all user input before passing it to network fetchers, filesystem functions, or HTML responses. Use allowlists where possible."
+    },
+    {
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "title": "Potential SQL Injection",
+      "description": "Detected Potential SQL Injection in code diff.",
+      "evidence": {
+        "snippet": "const sql = \"SELECT id,email,plan FROM users WHERE email = '\" + email + \"'\";",
+        "reasoning": "Static pattern match triggered a security rule.",
+        "impact_scenario": "This vulnerability could allow an attacker to execute arbitrary code or queries, leading to complete system compromise."
+      },
+      "location": {
+        "path": "",
+        "start_line": 105,
+        "end_line": 105
+      },
+      "recommended_fix": "Use parameterized inputs, sanitize data, or use safer alternatives to dangerous functions."
+    },
+    {
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "Unsafe JSON.parse (potential)",
+      "description": "Detected Unsafe JSON.parse (potential) in code diff.",
+      "evidence": {
+        "snippet": "filter = JSON.parse(raw);",
+        "reasoning": "Static pattern match triggered a security rule.",
+        "impact_scenario": "Untrusted data deserialization can lead to remote code execution or denial of service."
+      },
+      "location": {
+        "path": "",
+        "start_line": 115,
+        "end_line": 115
+      },
+      "recommended_fix": "Avoid deserializing untrusted data. Use safe schema-based parsers instead."
+    },
+    {
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "title": "Potential Path Traversal",
+      "description": "Detected Potential Path Traversal in code diff.",
+      "evidence": {
+        "snippet": "const base = path.join(__dirname, \"exports\");",
+        "reasoning": "Static pattern match triggered a security rule.",
+        "impact_scenario": "User-controlled input reaching a sensitive sink (network, file, or HTML) can lead to data exposure, internal probing, or client-side execution."
+      },
+      "location": {
+        "path": "",
+        "start_line": 152,
+        "end_line": 152
+      },
+      "recommended_fix": "Validate and sanitize all user input before passing it to network fetchers, filesystem functions, or HTML responses. Use allowlists where possible."
+    },
+    {
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "title": "Potential Path Traversal",
+      "description": "Detected Potential Path Traversal in code diff.",
+      "evidence": {
+        "snippet": "const p = path.join(base, name);",
+        "reasoning": "Static pattern match triggered a security rule.",
+        "impact_scenario": "User-controlled input reaching a sensitive sink (network, file, or HTML) can lead to data exposure, internal probing, or client-side execution."
+      },
+      "location": {
+        "path": "",
+        "start_line": 153,
+        "end_line": 153
+      },
+      "recommended_fix": "Validate and sanitize all user input before passing it to network fetchers, filesystem functions, or HTML responses. Use allowlists where possible."
+    }
+  ],
+  "tier2": {
+    "status": "ignored",
+    "reason": "invalid AI output schema",
+    "result": null
+  }
+}
