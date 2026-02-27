@@ -9,7 +9,7 @@ SentinelPR is a high-performance GitHub App that scans every Pull Request for se
 ## 🔥 Key Features
 
 - **🚀 Dual-Tier Analysis Engine**
-  - **Tier 1 (Static)**: 800+ optimized security rules targeting secrets, dangerous API sinks, and IaC misconfigurations.
+  - **Tier 1 (Static)**: 200+ optimized security rules targeting secrets, dangerous API sinks, and IaC misconfigurations.
   - **Tier 2 (AI Semantic)**: Triple-pass audit using LLMs (Gemini/Ollama) to detect complex logical vulnerabilities that static tools miss.
 - **📊 Professional Reporting**: Rich markdown summaries posted directly to your GitHub Check Runs, complete with severity levels, impact statements, and remediation guides.
 - **🛡️ Secure by Design**: Cryptographic webhook verification (HMAC-SHA256) and minimal permission requirements.
