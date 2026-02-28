@@ -27,7 +27,7 @@ SentinelPR follows a sophisticated multi-stage pipeline:
 4.  **Tier 2 Audit**: Pipes the code diff to an AI engine for a deep semantic "triple-pass" security review.
 5.  **Reporting**: Consolidates findings and updates the GitHub Check Run status.
 
-For more technical details, see [ARCHITECTURE.md](./ARCHITECTURE.md).
+
 
 ---
 
